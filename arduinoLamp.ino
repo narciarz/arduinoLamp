@@ -89,7 +89,7 @@ void cleanMemoryConfigDisk() {
 
 boolean handlePin(int gpPin, String newStatus) {
   Serial.printf("handlePin gpPin %d newStatus %s\n", gpPin, newStatus);
-  if (gpPin != 0) {
+  if ((gpPin >= 0 && gpPin <= 5) || (gpPin >= 12 && gpPin <= 16)) {
     pinMode(gpPin, OUTPUT);
     if (newStatus == "on") {
       Serial.printf("digitalWrite %s\n", newStatus);
