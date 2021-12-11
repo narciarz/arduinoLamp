@@ -206,6 +206,13 @@ void setup() {
   });
   server.onNotFound(handleNotFound);
 
+  server.on("gpio/update", HTTP_OPTIONS, []() {
+    server.sendHeader("access-control-allow-credentials", "false");
+    server.sendHeader("access-control-allow-headers", "x-requested-with, X-ApiKey");
+    server.sendHeader("access-control-allow-methods", "POST,OPTIONS");
+    server.send(204);
+  });
+  
   server.on("/gpio/update", HTTP_POST, []() {
     StaticJsonDocument<200> doc;
     auto error = deserializeJson(doc, server.arg("plain"));
