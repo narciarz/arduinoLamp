@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- Bootstrap Toggle -->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <title>LivingRoom LightApp</title>
+  </head>
+  <body>
+    <div id="msgBox"></div>
+      <pre class="mb-0"><code id="chgConsole" class="text-info"></code></pre>
+
+<br>
+<table class="table table-borderless text-center">
+  <thead>
+    <tr>
+      <th id="border" colspan="3">TV</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><input id="light00" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light01" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light02" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+    </tr>
+    <tr>
+      <td><input id="light10" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light11" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light12" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+    </tr>
+    <tr>
+      <td><input id="light20" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light21" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+      <td><input id="light22" type="checkbox" data-toggle="toggle" disabled data-onstyle="success" onchange="handleCheckbox(this)"></td>
+    </tr>
+  </tbody>
+</table>
+<button id="buttonReloadConfig" type="button" class="btn btn-outline-primary" onclick="reloadData()">Reload data</button>
+<button id="buttonSaveConfig" type="button" class="btn btn-outline-success" onclick="saveConfig()">Save config</button>
+<button id="buttonClearConfig" type="button" class="btn btn-outline-danger" onclick="clearConfig()">Clear config</button>
+
+
+<br>      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <!-- Bootstrap Toggle -->
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="configuration.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>
