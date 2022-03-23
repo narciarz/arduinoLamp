@@ -7,20 +7,21 @@
 #include <FS.h>
 #include <credentials.h>
 
-const char* ssid = mySSID; /* Add your router's SSID */
-const char* password = myPASSWORD; /*Add the password */
-const char* otapass = myOTAPASS; /*Add OTA pass to updates */
+/*Add sensitive mappings */
+const char* ssid = mySSID;
+const char* password = myPASSWORD;
+const char* otapass = myOTAPASS;
+const char* apikey = myAPIKEY;
+const char* jssecret = myJSSECRET;
+
 const char* host = "esp8266-LivingRoomBcp"; /*Add OTA deviceName */
 
 ESP8266WebServer server(80);   //instantiate server at port 80 (http port)
 
-String page = "";
 String acsCtrlAllowOrigin = "*";
-String okPage = "{status: \"OK\"}";
-const int LEDPin = 5;
 
-String apiKeyValue = "secretKey";
-String jsSecretResponse = "{\"key\":\"jsSecretKey\"}";
+String apiKeyValue = myAPIKEY;
+String jsSecretResponse = "{\"key\":\""+(String)myJSSECRET+"\"}";
 
 //enter your file name
 const char* file = "/config.json";
@@ -120,28 +121,12 @@ void handleCors() {
   server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
   server.send(204);
 }
-void initializeFileSystem() {
-  //Initialize File system
-//  SPIFFS.begin();
-  Serial.println("File System Initialized");
-  //open file for reading
-  File dataFile = SPIFFS.open(file, "r");
-  Serial.println("Reading Data from File:");
-  //Data from file
-  //Read upto complete size
-  for (int i = 0; i < dataFile.size(); i++)
-  {
-    Serial.print((char)dataFile.read());
-  }
 
-}
 void setup() {
   delay(1000);
   Serial.begin(115200);  
   Serial.println("Booting");
-
-
-//  initializeFileSystem();
+  
   loadMemoryConfigFromDisk();
 
   WiFi.begin(ssid, password); //begin WiFi connection
@@ -191,6 +176,10 @@ void setup() {
   server.on("/config/saveMemoryToDisk", []() {
     server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
     Serial.println("Save memory to disk...");
+    if (!is_authentified()) {
+      server.send(401, "text/html", "Access Forbidden");
+      return;
+    }
     if (cfg.isNull()) {
       Serial.println("Empty memory - nothing to save");
       server.send(204, "text/html", "Empty memory, nothing to save");
@@ -222,6 +211,10 @@ void setup() {
   });
   server.on("/config/loadFromDiskToMemory", []() {
     Serial.println("Load config from memory to disk...");
+    if (!is_authentified()) {
+      server.send(401, "text/html", "Access Forbidden");
+      return;
+    }
     loadMemoryConfigFromDisk();
     server.send(200, "application/json", "OK");
   });
@@ -230,7 +223,11 @@ void setup() {
   });
   server.on("/config/cleanDisk", []() {
     server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
-    Serial.println("Clean Disk...");
+    Serial.println("Clean disk...");
+    if (!is_authentified()) {
+      server.send(401, "text/html", "Access Forbidden");
+      return;
+    }
     cleanMemoryConfigDisk();
     server.send(200, "text/html", "OK");
   });
@@ -247,6 +244,10 @@ void setup() {
   server.on("/utils/restart", []() {
     server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
     Serial.println("Restart...");
+    if (!is_authentified()) {
+      server.send(401, "text/html", "Access Forbidden");
+      return;
+    }
     server.send(200, "text/html", "OK");
     delay(1000);
     ESP.restart();
@@ -257,22 +258,15 @@ void setup() {
   server.on("/utils/getWifiStatus", []() {
     server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
     Serial.println("Obtain Wifi Status...");
+    if (!is_authentified()) {
+      server.send(401, "text/html", "Access Forbidden");
+      return;
+    }
     long wifiSignal = WiFi.RSSI();
     Serial.printf("RSSI: %d dBm\n", wifiSignal);
     server.send(200, "text/html", "{\"wifi\":"+(String)wifiSignal+"}");
   });
-  server.on("/GPIO4OFF", []() {
-    server.send(200, "application/json", okPage);
-    digitalWrite(LEDPin, HIGH);
-//    handlePin(16, "off");
-    delay(1000);
-  });
-  server.on("/GPIO4ON", []() {
-    server.send(200, "application/json", okPage);
-    digitalWrite(LEDPin, LOW);
-//    handlePin(16, "on");
-    delay(1000);
-  });
+  
   server.onNotFound(handleNotFound);
 
   server.on("/gpio/update", HTTP_OPTIONS, []() {
@@ -281,6 +275,7 @@ void setup() {
   
   server.on("/gpio/update", HTTP_POST, []() {
     server.sendHeader("Access-Control-Allow-Origin", acsCtrlAllowOrigin);
+    Serial.println("Gpio update...");
     if (!is_authentified()) {
       server.send(401, "text/html", "Access Forbidden");
       return;
