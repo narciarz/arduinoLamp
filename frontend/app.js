@@ -70,9 +70,7 @@ function get(url) {
   console.log("Trying to fetch " + url);
   fetch(apiHost+url, {
     method: "GET", 
-    headers: {
-      'Access-Control-Allow-Origin':'*'
-    }
+    headers: gefDefaultHeaders()
   })
   .then(handleErrors)
   .then(response => console.log("ok") )
